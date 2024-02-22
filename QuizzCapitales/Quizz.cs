@@ -9,6 +9,9 @@ namespace QuizzCapitales
   internal class Quizz
   {
 
+    // Compteur de bonnes réponses
+    static int score = 0;
+
     // Définitions des pays
     static string?[] pays =
     {
@@ -55,31 +58,18 @@ namespace QuizzCapitales
 
       while (continuer)
       {
+
         // Boucle sur les pays
-        for (int i = 0; i < pays.Length; i++)
+        for (byte i = 0; i < pays.Length; i++)
         {
-          // Demande à l'utilisateur de saisir le nom de la capitale selon le pays concerné
-          Console.WriteLine($"Question n° {i + 1}/10");
-          Console.WriteLine($"Quel est la capitale du pays suivant: {pays[i]}");
+          bool resultatQuestion = PoserQuestion(i);
+          if (resultatQuestion) score++;
+        }
 
-          reponse = Console.ReadLine(); // Stock ici le résultat de la saisie utilisateur
-
-          if (reponse == capitales[i])
-          {
-            Console.WriteLine("Bravo !\n");
-            score++;
-          }
-          else
-          {
-            Console.WriteLine($"Mauvaise réponse, la bonne réponse était: {capitales[i]}\n");
-          }
-
-        } // end for pays
-
-        Console.WriteLine($"Votre score final est: {score}/{pays.Length}\n");
+        Console.WriteLine($"\nVotre score final est: {score}/{pays.Length}");
         Console.WriteLine("Souhaitez-vous rejouer une partie (O/N) ?");
-        string? reponsePourContinuerLeJeu = Console.ReadLine();
 
+        string? reponsePourContinuerLeJeu = Console.ReadLine();
         switch (reponsePourContinuerLeJeu)
         {
           case "n":
@@ -94,6 +84,26 @@ namespace QuizzCapitales
             Console.Clear();
             break;
         }
+      }
+    }
+
+    static bool PoserQuestion(byte questionNumber)
+    {
+      Console.WriteLine("\nA choississez un indice entre 0 et 9 qui correspondra à une question ?");
+      byte reponseNumeroQuestion = byte.Parse(Console.ReadLine());
+
+      Console.WriteLine($"Question n°{questionNumber + 1}, vous avez choisi l'indice n°{reponseNumeroQuestion} - Quel est la capitale du pays suivant ({pays[reponseNumeroQuestion]})");
+      string? reponseSaisitCapitale = Console.ReadLine();
+
+      if (reponseSaisitCapitale == capitales[reponseNumeroQuestion])
+      {
+        Console.WriteLine("Bravo !");
+        return true;
+      }
+      else
+      {
+        Console.WriteLine($"Mauvaise réponse, la bonne réponse était {capitales[reponseNumeroQuestion]}");
+        return false;
       }
     }
   }
