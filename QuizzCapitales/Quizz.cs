@@ -43,50 +43,10 @@ namespace QuizzCapitales
       };
 
     /// <summary>
-    /// Permet de jouer au jeu
+    /// Permet de poser une question au joueur afin qu'il saisisse un indice qui sera une référence à la question posé.
     /// </summary>
-    public static void Jouer()
-    {
-      Console.WriteLine("QUIZZ sur les Capitales\n");
-
-
-
-      // Initialisation de mes variables
-      string? reponse = string.Empty;
-      int score = 0;
-      bool continuer = true;
-
-      while (continuer)
-      {
-
-        // Boucle sur les pays
-        for (byte i = 0; i < pays.Length; i++)
-        {
-          bool resultatQuestion = PoserQuestion(i);
-          if (resultatQuestion) score++;
-        }
-
-        Console.WriteLine($"\nVotre score final est: {score}/{pays.Length}");
-        Console.WriteLine("Souhaitez-vous rejouer une partie (O/N) ?");
-
-        string? reponsePourContinuerLeJeu = Console.ReadLine();
-        switch (reponsePourContinuerLeJeu)
-        {
-          case "n":
-          case "N":
-            continuer = false;
-            Console.WriteLine("\nMerci d'avoir pris le temps de jouer !");
-            break;
-
-          default:
-            continuer = true;
-            score = 0;
-            Console.Clear();
-            break;
-        }
-      }
-    }
-
+    /// <param name="questionNumber"></param>
+    /// <returns>boolean</returns>
     static bool PoserQuestion(byte questionNumber)
     {
       Console.WriteLine("\nA choississez un indice entre 0 et 9 qui correspondra à une question ?");
@@ -106,5 +66,54 @@ namespace QuizzCapitales
         return false;
       }
     }
+
+    /// <summary>
+    /// Permet de demander à un joueur de recommencer le jeu. En fonctione la réponse soit on recommence soit on quitte le jeu.
+    /// </summary>
+    /// <param name="continuer"></param>
+    /// <returns></returns>
+    static bool DemanderSiRejouer(bool continuer = true)
+    {
+      Console.WriteLine("Souhaitez-vous rejouer une partie (O/N) ?");
+
+      string? reponsePourContinuerLeJeu = Console.ReadLine();
+      switch (reponsePourContinuerLeJeu)
+      {
+        case "n":
+        case "N":
+          Console.WriteLine("\nMerci d'avoir pris le temps de jouer !");
+          return false;
+
+        default:
+          score = 0;
+          Console.Clear();
+          return true;
+      }
+
+    }
+
+    /// <summary>
+    /// Permet de jouer au jeu
+    /// </summary>
+    public static void Jouer()
+    {
+      Console.WriteLine("QUIZZ sur les Capitales\n");
+      
+      bool continuer = true;
+      while (continuer)
+      {
+
+        // Boucle sur les pays
+        for (byte i = 0; i < pays.Length; i++)
+        {
+          bool resultatQuestion = PoserQuestion(i);
+          if (resultatQuestion) score++;
+        }
+
+        Console.WriteLine($"\nVotre score final est: {score}/{pays.Length}");
+        DemanderSiRejouer();
+      }
+    }
+
   }
 }
