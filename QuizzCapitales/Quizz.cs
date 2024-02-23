@@ -9,60 +9,33 @@ namespace QuizzCapitales
   internal class Quizz
   {
 
-    // Compteur de bonnes réponses
-    static int score = 0;
+    static string?[] pays = { "Albanie", "Allemagne", "Andorre", "Autriche", "Belgique", "Biélorussie", "Bosnie-Herségovine", "Bulgarie", "Chypre", "Croatie" }; // Définitions des pays    
+    static string?[] capitales = { "Tirana", "Berlin", "Andorre-la-Vieille", "Vienne", "Bruxelles", "Minsk", "Sarajevo", "Sofia", "Nicosie", "Zagreb" }; // Définitions des Captiales
 
-    // Définitions des pays
-    static string?[] pays =
-    {
-        "Albanie",
-        "Allemagne",
-        "Andorre",
-        "Autriche",
-        "Belgique",
-        "Biélorussie",
-        "Bosnie-Herségovine",
-        "Bulgarie",
-        "Chypre",
-        "Croatie"
-      };
-
-    // Définitions des Captiales
-    static string?[] capitales =
-    {
-        "Tirana",
-        "Berlin",
-        "Andorre-la-Vieille",
-        "Vienne",
-        "Bruxelles",
-        "Minsk",
-        "Sarajevo",
-        "Sofia",
-        "Nicosie",
-        "Zagreb"
-      };
+    /**
+     * =====================================================================================================================================
+     * METHODES UTILITAIRES
+     * =====================================================================================================================================
+     **/
 
     /// <summary>
     /// Permet de poser une question au joueur afin qu'il saisisse un indice qui sera une référence à la question posé.
     /// </summary>
     /// <param name="questionNumber"></param>
     /// <returns>boolean</returns>
-    static bool PoserQuestion(byte questionNumber)
+    static bool PoserQuestion(int numQuestion)
     {
-      Console.WriteLine("\nA choississez un indice entre 0 et 9 qui correspondra à une question ?");
-      byte reponseNumeroQuestion = byte.Parse(Console.ReadLine());
+      Console.WriteLine($"\nQuelle est la capitale du pays suivant: {pays[numQuestion]} ?");
+      string? reponseCapitale = Console.ReadLine();
 
-      Console.WriteLine($"Question n°{questionNumber + 1}, vous avez choisi l'indice n°{reponseNumeroQuestion} - Quel est la capitale du pays suivant ({pays[reponseNumeroQuestion]})");
-      string? reponseSaisitCapitale = Console.ReadLine();
-
-      if (reponseSaisitCapitale == capitales[reponseNumeroQuestion])
+      if (reponseCapitale == capitales[numQuestion])
       {
         Console.WriteLine("Bravo !");
         return true;
       }
       else
       {
-        Console.WriteLine($"Mauvaise réponse, la bonne réponse était {capitales[reponseNumeroQuestion]}");
+        Console.WriteLine($"Mauvaise réponse, la bonne réponse était {capitales[numQuestion]}");
         return false;
       }
     }
@@ -72,48 +45,77 @@ namespace QuizzCapitales
     /// </summary>
     /// <param name="continuer"></param>
     /// <returns></returns>
-    static bool DemanderSiRejouer(bool continuer = true)
+    static bool DemanderSiRejouer()
     {
-      Console.WriteLine("Souhaitez-vous rejouer une partie (O/N) ?");
+      Console.WriteLine("Voulez-vous rejouer une partie (O/N) ?");
+      string? reponseRejouer = Console.ReadLine();
 
-      string? reponsePourContinuerLeJeu = Console.ReadLine();
-      switch (reponsePourContinuerLeJeu)
+      switch (reponseRejouer)
       {
         case "n":
         case "N":
-          Console.WriteLine("\nMerci d'avoir pris le temps de jouer !");
+          Console.WriteLine("\nMerci d'avoir joué, à bientôt");
           return false;
 
         default:
-          score = 0;
           Console.Clear();
           return true;
       }
-
     }
 
+    /**
+     * =====================================================================================================================================
+     * METHODES - DIFFERENTS JEUX
+     * =====================================================================================================================================
+     **/
+
     /// <summary>
-    /// Permet de jouer au jeu
+    /// Jouer normalement
+    /// Permet de jouer au jeu avec la configuration d'origine
     /// </summary>
     public static void Jouer()
     {
       Console.WriteLine("QUIZZ sur les Capitales\n");
-      
+
       bool continuer = true;
+      int score = 0;
       while (continuer)
       {
-
         // Boucle sur les pays
-        for (byte i = 0; i < pays.Length; i++)
+        for (int i = pays.Length - 1; i >= 0; i--)
         {
           bool resultatQuestion = PoserQuestion(i);
           if (resultatQuestion) score++;
         }
 
-        Console.WriteLine($"\nVotre score final est: {score}/{pays.Length}");
-        DemanderSiRejouer();
+        Console.WriteLine($"\nNombre de bonnes réponses : {score}/{pays.Length}");
+        continuer = DemanderSiRejouer();
       }
     }
 
+    /// <summary>
+    /// Permet de jouer au jeu avec cette fois-ci des paramètres passé à la fonction
+    /// </summary>
+    /// <param name="numQuestions"></param>
+    public static void Jouer(params int[] numQuestions)
+    {
+      Console.WriteLine("QUIZZ sur les Capitales - Mode personalisé\n");
+
+      bool continuer = true;
+      int score = 0;
+      while (continuer)
+      {
+        foreach (int num in numQuestions)
+        {
+          if (num > 0 && num <= pays.Length)
+          {
+            bool resultatQuestion = PoserQuestion(num - 1);
+            if (resultatQuestion) score++;
+          }
+        }
+        Console.WriteLine($"\nNombre de bonnes réponses : {score}/{numQuestions.Length}");
+        continuer = DemanderSiRejouer();
+      }
+    }
   }
 }
