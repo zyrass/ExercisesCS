@@ -63,6 +63,44 @@ namespace QuizzCapitales
       }
     }
 
+
+    public static (int, int, int) Générer3Numéros()
+    {
+
+      (int number1, int number2, int number3) numéros;
+
+      Random rand = new Random(); // initialise le générateur
+      numéros.number1 = rand.Next(1, 11);
+      numéros.number2 = rand.Next(1, 11);
+      numéros.number3 = rand.Next(1, 11);
+
+      return numéros;
+    }
+
+    static int SaisirNombre(int min, int max)
+    {
+      Console.WriteLine($"Saisissez un nombre compris entre {min} et {max}");
+      bool réponseOK;
+      int num;
+      do
+      {
+        string? réponseSaisie = Console.ReadLine();
+        réponseOK = int.TryParse(réponseSaisie, out num) && num >= min && num <= max;
+      } while (!réponseOK);
+
+      return num;
+    }
+
+    public static (int, int, int) Saisir3Numéros()
+    {
+      (int number1, int number2, int number3) numéros;
+      numéros.number1 = SaisirNombre(1, 10);
+      numéros.number2 = SaisirNombre(1, 10);
+      numéros.number3 = SaisirNombre(1, 10);
+
+      return numéros;
+    }
+
     /**
      * =====================================================================================================================================
      * METHODES - DIFFERENTS JEUX
